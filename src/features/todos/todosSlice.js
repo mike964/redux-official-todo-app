@@ -58,3 +58,13 @@ export default function todosReducer(state = initialState, action) {
       return state
   }
 }
+
+// * SELECTORS
+//-----------------
+// const selectTodos = state => state.todos
+
+// Find out how many todos are currently marked as "completed":
+const selectTotalCompletedTodos = (state) => {
+  const completedTodos = state.todos.filter((todo) => todo.completed)
+  return completedTodos.length
+}

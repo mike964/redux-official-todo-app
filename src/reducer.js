@@ -8,5 +8,6 @@ const rootReducer = combineReducers({
   todos: todosReducer,
   filters: filtersReducer,
 })
+// * a reducer is a segment/slice of the store
 
 export default rootReducer
