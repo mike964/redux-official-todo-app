@@ -1,3 +1,5 @@
+import { client } from '../../api/client'
+
 const initialState = []
 
 function nextTodoId(todos) {
@@ -11,11 +13,12 @@ export default function todosReducer(state = initialState, action) {
       // Can return just the new todos array - no extra object around it
       return [
         ...state,
-        {
-          id: nextTodoId(state),
-          text: action.payload,
-          completed: false,
-        },
+        // {
+        //   id: nextTodoId(state),
+        //   text: action.payload,
+        //   completed: false,
+        // },
+        action.payload,
       ]
     }
     case 'todos/todoToggled': {
@@ -36,7 +39,6 @@ export default function todosReducer(state = initialState, action) {
         if (todo.id !== todoId) {
           return todo
         }
-
         return {
           ...todo,
           color,
@@ -54,6 +56,9 @@ export default function todosReducer(state = initialState, action) {
     case 'todos/completedCleared': {
       return state.filter((todo) => !todo.completed)
     }
+    case 'todos/todosLoaded': {
+      return action.payload
+    }
     default:
       return state
   }
@@ -67,4 +72,19 @@ export default function todosReducer(state = initialState, action) {
 const selectTotalCompletedTodos = (state) => {
   const completedTodos = state.todos.filter((todo) => todo.completed)
   return completedTodos.length
+}
+
+// Thunk function
+export async function fetchTodos(dispatch, getState) {
+  const response = await client.get('/fakeApi/todos')
+  console.log(response)
+  dispatch({ type: 'todos/todosLoaded', payload: response.todos })
+}
+
+export function saveNewTodo(text) {
+  return async function saveNewTodoThunk(dispatch, getState) {
+    const initialTodo = { text }
+    const response = await client.post('/fakeApi/todos', { todo: initialTodo })
+    dispatch({ type: 'todos/todoAdded', payload: response.todo })
+  }
 }

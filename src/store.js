@@ -1,26 +1,27 @@
 import { createStore, applyMiddleware } from 'redux'
+import thunkMiddleware from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import rootReducer from './reducer'
 import { print1, print2, print3 } from './exampleAddons/middleware'
 
 const composedEnhancer = composeWithDevTools(
   // Add whatever middleware you actually want to use here
-  applyMiddleware()
+  applyMiddleware(thunkMiddleware)
   // other store enhancers if any
 )
 
 const store = createStore(rootReducer, composedEnhancer)
 
 // For Testing
-store.dispatch({ type: 'todos/todoAdded', payload: 'Learn about actions' })
-store.dispatch({ type: 'todos/todoAdded', payload: 'Learn about reducers' })
-store.dispatch({ type: 'todos/todoToggled', payload: 0 })
-store.dispatch({ type: 'todos/todoToggled', payload: 1 })
-store.dispatch({ type: 'filters/statusFilterChanged', payload: 'Active' })
-store.dispatch({
-  type: 'filters/colorFilterChanged',
-  payload: { color: 'red', changeType: 'added' },
-})
+// store.dispatch({ type: 'todos/todoAdded', payload: 'Learn about actions' })
+// store.dispatch({ type: 'todos/todoAdded', payload: 'Learn about reducers' })
+// store.dispatch({ type: 'todos/todoToggled', payload: 0 })
+// store.dispatch({ type: 'todos/todoToggled', payload: 1 })
+// store.dispatch({ type: 'filters/statusFilterChanged', payload: 'Active' })
+// store.dispatch({
+//   type: 'filters/colorFilterChanged',
+//   payload: { color: 'red', changeType: 'added' },
+// })
 
 export default store
 
