@@ -75,16 +75,61 @@ const selectTotalCompletedTodos = (state) => {
 }
 
 // Thunk function
-export async function fetchTodos(dispatch, getState) {
-  const response = await client.get('/fakeApi/todos')
-  console.log(response)
-  dispatch({ type: 'todos/todosLoaded', payload: response.todos })
+export function fetchTodos() {
+  return async function fetchTodosThunk(dispatch, getState) {
+    const response = await client.get('/fakeApi/todos')
+    dispatch(todosLoaded(response.todos))
+  }
 }
+// Same thing as the above example! (but use arrow func)
+/*
+  export const fetchTodos = () => async dispatch => {
+    const response = await client.get('/fakeApi/todos')
+    dispatch(todosLoaded(response.todos))
+  }
+*/
 
 export function saveNewTodo(text) {
   return async function saveNewTodoThunk(dispatch, getState) {
     const initialTodo = { text }
     const response = await client.post('/fakeApi/todos', { todo: initialTodo })
-    dispatch({ type: 'todos/todoAdded', payload: response.todo })
+    // dispatch({ type: 'todos/todoAdded', payload: response.todo })
+    dispatch(todoAdded(response.todo))
   }
 }
+
+// -------------------
+// * ACTION CREATORS *
+// -------------------
+// - An action creator is a function that creates and returns an action object
+
+export const todosLoaded = (todos) => {
+  return {
+    type: 'todos/todosLoaded',
+    payload: todos,
+  }
+}
+
+export const todoAdded = (todo) => {
+  return {
+    type: 'todos/todoAdded',
+    payload: todo,
+  }
+}
+
+export const colorFilterChanged = (color, changeType) => {
+  return {
+    type: 'filters/colorFilterChanged',
+    payload: { color, changeType },
+  }
+}
+
+/*
+  Memoization is a kind of caching - specifically, saving the results of an 
+  expensive calculation, and reusing those results if we see the same inputs later.
+
+  Memoized selector functions are selectors that save the most recent result 
+  value, and if you call them multiple times with the same inputs, will return 
+  the same result value. If you call them with different inputs than last time, 
+  they will recalculate a new result value, cache it, and return the new result.
+*/
