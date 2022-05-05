@@ -1,16 +1,20 @@
-import { createStore, applyMiddleware } from 'redux'
-import thunkMiddleware from 'redux-thunk'
-import { composeWithDevTools } from 'redux-devtools-extension'
-import rootReducer from './reducer'
-import { print1, print2, print3 } from './exampleAddons/middleware'
+import todosReducer from './features/todos/todosSlice'
+import filtersReducer from './features/filters/filtersSlice'
+import { configureStore } from '@reduxjs/toolkit'
 
-const composedEnhancer = composeWithDevTools(
-  // Add whatever middleware you actually want to use here
-  applyMiddleware(thunkMiddleware)
-  // other store enhancers if any
-)
+// const rootReducer = combineReducers({
+//   // Define a top-level state field named `todos`, handled by `todosReducer`
+//   todos: todosReducer,
+//   filters: filtersReducer
+// })
 
-const store = createStore(rootReducer, composedEnhancer)
+const store = configureStore({
+  reducer: {
+    // Define a top-level state field named `todos`, handled by `todosReducer`
+    todos: todosReducer,
+    filters: filtersReducer,
+  },
+})
 
 // For Testing
 // store.dispatch({ type: 'todos/todoAdded', payload: 'Learn about actions' })
